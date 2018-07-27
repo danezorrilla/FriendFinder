@@ -1,3 +1,5 @@
+// Holds all of the friends
+
 var friendsList = [
     {
         name: "Ash Ketchum",

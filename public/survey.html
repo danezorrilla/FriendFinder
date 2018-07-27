@@ -169,6 +169,7 @@
 
         <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit" data-toggle="modal" data-target="#myModal">Submit</button>
 
+        <!-- Modal -->
         <div class="modal fade" id="myModal" role="dialog">
             <div class="modal-dialog">
 
@@ -206,11 +207,13 @@
 
     <script>
 
+        // Global Variables
         var difference;
         var totalDifference = 0;
         var lowestDiffernce;
         var bestFriendName ="";
     
+        // when the user hits the submit button, jQuery will grab all of the fields and send a POST request to our api
         $("#submit").on("click", function(event){
             event.preventDefault();
             console.log("button works");
@@ -234,7 +237,9 @@
 
             $.post('/api/friends', newFriend, function(data){
                 console.log(data);
+                // loop through our data source
                 for(var i = 0; i < data.length -1; i++){
+                    // loop through scores of each friend
                     for(var j = 0; j < data[i].scores.length; j++){
                         getDifference(data[i].scores[j], newFriend.scores[j]);
                         console.log("The difference is " + difference);
@@ -242,38 +247,44 @@
                     }
                     console.log("---------------------------------------------------");
                     console.log("The total difference is " + totalDifference);
-                    //bestFriendName = data[i].name;
-                    //checkLowestDiff();
+
                     if(isNaN(lowestDiffernce)){
                         lowestDiffernce = totalDifference;
                     }
+                    // if the total difference is less than the current lowest difference
                     if(totalDifference <= lowestDiffernce){
                         lowestDiffernce = totalDifference;
                         bestFriendName = data[i].name;
                         $('.modal-body').empty();
+                        // create a header tag that will store the lowest difference friend name
                         var matchedFriendName = $('<h5>');
+                        // create a imag tag that will store the lowest difference friend photo
                         var matchedFriendPhoto = $('<img>');
                         matchedFriendPhoto.addClass('img-thumbnail');
                         matchedFriendPhoto.attr('src', data[i].photo);
                         matchedFriendName.text(bestFriendName);
+                        // append to the modal
                         $('.modal-body').append(matchedFriendName);
                         $('.modal-body').append(matchedFriendPhoto);
                     } 
 
                     console.log("The lowest difference is " + lowestDiffernce);
                     console.log(bestFriendName);
+                    // set the total difference to 0
                     totalDifference = 0;
                 }
-                
+
             });
 
 
         });
 
+        // calculate the difference of each question
         function getDifference(firstNum, secondNum){
             difference = Math.abs(firstNum - secondNum);
         }
 
+        // calaculate the total difference of each friend
         function calculateTotalDiff(result){
             totalDifference = totalDifference + result;
         }
